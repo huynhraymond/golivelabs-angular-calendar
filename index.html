@@ -19,21 +19,28 @@
     -->
     <section ng-controller="CalendarEventsCtrl">
         <div class="calendar-caption">Calendar Events</div>
+
+        <!--
         <table class="calendar-table">
             <tr>
-                <th>Event ID</th>
-                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
                 <th>Title</th>
             </tr>
-            <!--
-            <tr ng-repeat="event in events | filter: eventFilter | orderBy: 'id'" class="calendar-table-event">
-            -->
             <tr ng-repeat="event in events | orderBy: 'id'" class="calendar-table-event">
-                <td>{{event.id}}</td>
-                <td>{{event.date}}</td>
+                <td>{{event.start}}</td>
+                <td>{{event.end}}</td>
                 <td>{{event.title}}</td>
             </tr>
         </table>
+        -->
+
+        <div class="calendar-list-events">
+            <div class="calendar-event" ng-repeat="event in events | orderBy: 'id'">
+                <div class="calendar-event-start">{{event.start}}</div>
+                <div class="calendar-event-title">{{event.title}}</div>
+            </div>
+        </div>
 
         <div class="calendar-container clearfix">
             <div class="top-bar">

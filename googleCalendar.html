@@ -1,122 +1,89 @@
+<!DOCTYPE html>
 <html>
-<head>
-    <script type="text/javascript">
-        // Your Client ID can be retrieved from your project in the Google
-        // Developer Console, https://console.developers.google.com
-        //var CLIENT_ID = '851490309097-gkc13qbot23qk6ofc8s60hn7me4gs6gt.apps.googleusercontent.com';
-        var CLIENT_ID = '465620177785-srtugv2vvsh8ma4t5kce0coddjcnf4l0.apps.googleusercontent.com';
-
-        var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
-
-        /**
-         * Check if current user has authorized this application.
-         */
-        function checkAuth() {
-            gapi.auth.authorize(
-                    {
-                        'client_id': CLIENT_ID,
-                        'scope': SCOPES,
-                        'immediate': true
-                    }, handleAuthResult);
-        }
-
-        /**
-         * Handle response from authorization server.
-         *
-         * @param {Object} authResult Authorization result.
-         */
-        function handleAuthResult(authResult) {
-            var authorizeDiv = document.getElementById('authorize-div');
-            if (authResult && !authResult.error) {
-                // Hide auth UI, then load client library.
-                authorizeDiv.style.display = 'none';
-                loadCalendarApi();
-            } else {
-                // Show auth UI, allowing the user to initiate authorization by
-                // clicking authorize button.
-                authorizeDiv.style.display = 'inline';
-            }
-        }
-
-        /**
-         * Initiate auth flow in response to user clicking authorize button.
-         *
-         * @param {Event} event Button click event.
-         */
-        function handleAuthClick(event) {
-            gapi.auth.authorize(
-                    {client_id: CLIENT_ID, scope: SCOPES, immediate: false},
-                    handleAuthResult);
-            return false;
-        }
-
-        /**
-         * Load Google Calendar client library. List upcoming events
-         * once client library is loaded.
-         */
-        function loadCalendarApi() {
-            gapi.client.load('calendar', 'v3', listUpcomingEvents);
-        }
-
-        /**
-         * Print the summary and start datetime/date of the next ten events in
-         * the authorized user's calendar. If no events are found an
-         * appropriate message is printed.
-         */
-        function listUpcomingEvents() {
-            var request = gapi.client.calendar.events.list({
-                'calendarId': 'primary',
-                'timeMin': (new Date()).toISOString(),
-                'showDeleted': false,
-                'singleEvents': true,
-                'maxResults': 10,
-                'orderBy': 'startTime'
-            });
-
-            request.execute(function(resp) {
-                var events = resp.items;
-                appendPre('Upcoming events:');
-
-                if (events.length > 0) {
-                    for (i = 0; i < events.length; i++) {
-                        var event = events[i];
-                        var when = event.start.dateTime;
-                        if (!when) {
-                            when = event.start.date;
-                        }
-                        appendPre(event.summary + ' (' + when + ')')
-                    }
-                } else {
-                    appendPre('No upcoming events found.');
-                }
-
-            });
-        }
-
-        /**
-         * Append a pre element to the body containing the given message
-         * as its text node.
-         *
-         * @param {string} message Text to be placed in pre element.
-         */
-        function appendPre(message) {
-            var pre = document.getElementById('output');
-            var textContent = document.createTextNode(message + '\n');
-            pre.appendChild(textContent);
-        }
-
-    </script>
-    <script src="https://apis.google.com/js/client.js?onload=checkAuth">
-    </script>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src = "https://code.jquery.com/jquery-2.1.4.min.js"></script>
 </head>
 <body>
-<div id="authorize-div" style="display: none">
-    <span>Authorize access to Google Calendar API</span>
-    <!--Button for the user to click to initiate auth sequence -->
-    <button id="authorize-button" onclick="handleAuthClick(event)">
-        Authorize
-    </button>
+
+<div id="output">
+    Don't you just love it when a plan comes together
 </div>
-<pre id="output"></pre>
+
+<script>
+    var apikey = 'AIzaSyDnS-PyjZDwxvJrFzCD9BO0i6w3h-LWp5k';
+
+    var url = 'https://www.googleapis.com/calendar/v3/calendars/nina2308%40gmail.com/events?key='+apikey;
+
+    //    document.addEventListener('DOMContentLoaded',function(){
+    //makeAJAXCall('GET',url);
+    //   });
+
+
+    function makeAJAXCall(verb, url){
+        var xhr =  new XMLHttpRequest();
+        xhr.open(verb, url);
+        xhr.addEventListener('readystatechange',function(){
+            if(xhr.readyState === 4){
+                //console.log(xhr.responseText.items);
+                displayOnTarget(listEvents(JSON.parse(xhr.responseText)));
+            }
+        });
+        xhr.send();
+    }
+
+    function listEvents(resultSet){
+        //console.log(resultSet.items);
+        var set = [];
+        resultSet.items.map(function(event){
+            set.push({title: event.summary, start: event.start.dateTime, end: event.end.dateTime});
+        });
+        set =  set.filter(function(item){
+            if(new Date(item.start) >= new Date(Date.now())){
+                //console.log('start time lesser than ', item);
+                return true;
+            }
+            else return false;
+        });
+        //console.log(set);
+        return set;
+    }
+
+    function displayOnTarget(result){
+        /* result.forEach(function(event){
+         $('#output').text('Event: '+ event.title+ ' '+ new Date(event.start).toLocaleTimeString()+ ' - ' + new Date(event.end).toLocaleTimeString());
+         });*/
+        console.log(result);
+        var event;
+        setInterval(function(){
+            event = result.shift();
+            $('#output').hide().fadeIn(9000).text('Event: '+ event.title+ ' '+ new Date(event.start).toLocaleString()+ ' - ' + new Date(event.end).toLocaleString());
+            result.push(event);
+        },9000);
+    }
+
+    function createElement(elementType, parent, className, innerHTML, custom) {
+        var element = document.createElement(elementType);
+        if (parent) parent.appendChild(element);
+        if (className) element.className = className;
+        if (innerHTML) element.innerHTML = innerHTML;
+        if (typeof custom !== 'undefined') {
+            for (var prop in custom) {
+                element.setAttribute(prop, custom[prop]);
+            }
+        }
+        return element;
+    }
+
+
+
+    $(document).ready(function(){
+        //makeAJAXCall('GET',url);
+        //$('#output').hide().fadeIn(9000);
+        setInterval(makeAJAXCall('GET',url),900000);
+    });
+
+</script>
 </body>
 </html>

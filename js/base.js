@@ -1,6 +1,16 @@
 
 var calendarApp = angular.module('calendarApp', []);
 
+calendarApp.run(['EventsService', function(EventsService){
+    var apikey = 'AIzaSyDnS-PyjZDwxvJrFzCD9BO0i6w3h-LWp5k';
+    var url = 'https://www.googleapis.com/calendar/v3/calendars/nina2308%40gmail.com/events?key='+apikey;
+
+
+    EventsService.makeAjaxCall(url).success( function(data) {
+        EventsService.setEvents(data);
+    });
+}]);
+
 calendarApp.controller('CalendarEventsCtrl', ['$scope', 'EventsService', function($scope, EventsService) {
     var calendar = new Calendar();
 
@@ -21,6 +31,7 @@ calendarApp.controller('CalendarEventsCtrl', ['$scope', 'EventsService', functio
     };
 
     var allEvents = [];
+    $scope.events = [];
 
     $scope.getEvent = function(start) {
 
@@ -50,6 +61,9 @@ calendarApp.controller('CalendarEventsCtrl', ['$scope', 'EventsService', functio
         function(newValue) {
 
             allEvents = newValue;
+
+            //console.log(allEvents);
+
             $scope.getEvent();
             updateCalendarEvents();
         }
@@ -75,7 +89,10 @@ calendarApp.controller('CalendarEventsCtrl', ['$scope', 'EventsService', functio
     }
 }]);
 
-calendarApp.factory('EventsService', function() {
+calendarApp.factory('EventsService', ['$http', function($http) {
+    var events = [];
+
+    /*
     var events = [
         {id: 1435474800000, date: (new Date(1435474800000)).toString().split(" ").slice(0, -2).join(" "),
             title: "Cuxi Birthday"},
@@ -91,18 +108,52 @@ calendarApp.factory('EventsService', function() {
             title: "Steven Dentist"},
         {id: 1435647600000, date: (new Date(1435647600000)).toString().split(" ").slice(0, -2).join(" "),
             title: "Raymond Interview"},
-    ];
-
-    //var test = events[0].date.split(" ").slice(0, -2).join(" ");
-    //console.log(test);
+    ];      */
 
     return {
         getEvents: function() {
             return events;
         },
 
-        setEvents: function(tasks) {
-            events = tasks;
+        setEvents: function(data) {
+
+            var results = [];
+
+            // only interest in events from today on
+            var now = +new Date();
+
+            results = data.items.filter( function(event) {
+                if ( !event.start.dateTime || !event.end.dateTime)    return false;   // missing date time - discard
+
+                if ( +new Date(event.start.dateTime) >= now )       return true;
+
+                return false;
+            });
+
+            var temp = [];
+            results.map( function(event) {
+                temp.push(eventHelper(event));
+            });
+
+            events = temp;
+        },
+
+        makeAjaxCall: function(url) {
+            return $http.get(url);
         }
+    };
+
+    function eventHelper(event) {
+
+        var date = new Date(event.start.dateTime);      // Only interest in year, month and date
+        var utc = +new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        var startStr = (new Date(event.start.dateTime)).toString();
+        startStr = startStr.split(" ").slice(0, -2).join(" ");
+
+        var endStr = (new Date(event.end.dateTime)).toString();
+        endStr = endStr.split(" ").slice(0, -2).join(" ");
+
+        return {id: utc, start: startStr, end: endStr, title: event.summary}
     }
-});
+}]);

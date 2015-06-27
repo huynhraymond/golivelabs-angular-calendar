@@ -2,7 +2,7 @@
 $golivelabs-primary: #9b4bbf
 $golivelabs-text: #eeeeee
 $golivelabs-secondary: #72c02c
-$golivelabs-table-width: calc(100% - 20em)
+$golivelabs-event-width: calc(100% - 20em)
 
 html, body
   font: 300 1em 'Helvetica Neue'
@@ -21,34 +21,29 @@ div.calendar-caption
   font-size: 2em
 
 /******************* List of Events ******************/
-section.calendar-list-events
-  width: calc(100% - 20em)
+div.calendar-list-events
+  width: $golivelabs-event-width
   display: inline-block
-
 
 div.calendar-event
   line-height: 2em
   font-weight: 500
-
-/***************** Table of Calendar Events ********************/
-table.calendar-table
-  width: $golivelabs-table-width
-  color: $golivelabs-primary
-  font-weight: 500
-  display: inline-block
-
-tr.calendar-table-event > td
-  line-height: 2em
-  padding: 0.5em
   margin: 0.5em
   color: $golivelabs-secondary
+
+div.calendar-event-start
+  width: 25%
+  float: left
+
+div.calendar-event-title
+  color: $golivelabs-primary
 
 /****************** Calendar *************************/
 div.calendar-container
   float: right
-  display: inline-block
   width: 18.625em
   color: $golivelabs-text
+
 
 div.top-bar
   padding: 0.5em
