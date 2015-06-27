@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="calendarApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/calendar.css">
+    <script src="bower_components/angular/angular.min.js"></script>
+
+    <script src="js/calendar.js"></script>
+    <script src="js/base.js"></script>
+</head>
+<body>
+    <!--
+    <section class="calendar-list-events" ng-controller="EventsCtrl">
+        <div class="calendar-event" ng-repeat="event in events | filter: eventFilter | orderBy: 'id'">
+            {{event.id}} - {{event.date}} - {{event.title}}
+        </div>
+    </section>
+    -->
+    <section ng-controller="CalendarEventsCtrl">
+        <div class="calendar-caption">Calendar Events</div>
+        <table class="calendar-table">
+            <tr>
+                <th>Event ID</th>
+                <th>Date</th>
+                <th>Title</th>
+            </tr>
+            <!--
+            <tr ng-repeat="event in events | filter: eventFilter | orderBy: 'id'" class="calendar-table-event">
+            -->
+            <tr ng-repeat="event in events | orderBy: 'id'" class="calendar-table-event">
+                <td>{{event.id}}</td>
+                <td>{{event.date}}</td>
+                <td>{{event.title}}</td>
+            </tr>
+        </table>
+
+        <div class="calendar-container clearfix">
+            <div class="top-bar">
+                <div id="prev-month" ng-click="getMonth(false)"> << </div>
+                <div class="calendar-title">{{monthTitle}}</div>
+                <div id="next-month" ng-click="getMonth(true)"> >> </div>
+            </div>
+            <div class="days-of-week">
+                <div class="calendar-date">S</div>
+                <div class="calendar-date">M</div>
+                <div class="calendar-date">T</div>
+                <div class="calendar-date">W</div>
+                <div class="calendar-date">T</div>
+                <div class="calendar-date">F</div>
+                <div class="calendar-date">S</div>
+            </div>
+            <div class="calendar-dates">
+                <div ng-repeat="day in month" class="calendar-date {{day.monthType}}" ng-class="{'calendar-active': day.active}">
+                    <a href="#/{{day.id}}" ng-click="getEvent(day.id)">{{day.date}}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

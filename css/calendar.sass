@@ -1,0 +1,101 @@
+
+$golivelabs-primary: #9b4bbf
+$golivelabs-text: #eeeeee
+$golivelabs-secondary: #72c02c
+$golivelabs-table-width: calc(100% - 20em)
+
+html, body
+  font: 300 1em 'Helvetica Neue'
+  -moz-user-select: none
+  -webkit-user-select: none
+
+.clearfix::after
+  content: ''
+  display: block
+  clear: both
+
+div.calendar-caption
+  text-align: center
+  color: $golivelabs-primary
+  font-weight: 500
+  font-size: 2em
+
+/******************* List of Events ******************/
+section.calendar-list-events
+  width: calc(100% - 20em)
+  display: inline-block
+
+
+div.calendar-event
+  line-height: 2em
+  font-weight: 500
+
+/***************** Table of Calendar Events ********************/
+table.calendar-table
+  width: $golivelabs-table-width
+  color: $golivelabs-primary
+  font-weight: 500
+  display: inline-block
+
+tr.calendar-table-event > td
+  line-height: 2em
+  padding: 0.5em
+  margin: 0.5em
+  color: $golivelabs-secondary
+
+/****************** Calendar *************************/
+div.calendar-container
+  float: right
+  display: inline-block
+  width: 18.625em
+  color: $golivelabs-text
+
+div.top-bar
+  padding: 0.5em
+  width: 17.5em
+  text-align: center
+  color: $golivelabs-primary
+  font-weight: 700
+
+div.calendar-title
+  width: calc(100% - 6em)
+  float: left
+  line-height: 2em
+
+div#prev-month, div#next-month
+  width: 2em
+  line-height: 2em
+  margin: 0.25em
+  cursor: pointer
+
+div#prev-month
+  float: left
+
+div#next-month
+  float: right
+
+div.days-of-week, div.calendar-dates
+  padding: 0.5em
+  float: left
+  width: 17.5em
+  margin: 0
+
+div.calendar-date
+  width: 2em
+  line-height: 2em
+  text-align: center
+  margin: 0.25em
+  float: left
+  background-color: $golivelabs-primary
+
+div.calendar-date > a, a:visited, a:active
+  text-decoration: none
+  color: $golivelabs-text
+
+
+div.prev-month, div.next-month
+  background-color: rgba(155, 75, 191, 0.3)
+
+div.calendar-active
+  background-color: $golivelabs-secondary
+  /*background-color: rgba(0, 0, 0, 0.8)*/
