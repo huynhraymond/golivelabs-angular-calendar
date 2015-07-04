@@ -17,8 +17,8 @@ In order to calculate the event that map to specific day on the calendar, we do 
 
 var index = ( event.id - [0].id ) / day;
 
-event.id => day of event in UTC format(mm/dd/yyyy)
-[0].id => the first day in the current display calendar
-the difference will the divide by total ms of the day
+event.id => day of event in UTC format(mm/dd/yyyy);
+[0].id => the first day in the current display calendar;
+the difference will the divide by total ms of the day;
 We then obtain the index position of the event day, using CSS set to active.
 
